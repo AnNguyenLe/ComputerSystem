@@ -276,7 +276,7 @@ namespace NumberSystemConverter
             {
                 binaryElements[eleIndex] = zeroPaddedBinaryString.Substring(currentIndex, numberOfBinaryGrouping);
 
-                currentIndex = currentIndex + numberOfBinaryGrouping;
+                currentIndex += numberOfBinaryGrouping;
                 ++eleIndex;
             }
 
