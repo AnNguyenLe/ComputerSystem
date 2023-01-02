@@ -290,19 +290,6 @@ namespace NumberSystemConverter
             Console.WriteLine($"Binary representation of {rawBinaryString} converted to Hexadecimal number is: {hexRepresentation}");
             Console.Read();
         }
-
-        //static public string[] CalculateTwosComplementOfBinaryNumber(string[] unsignedValueElements)
-        //{
-        //    int elementsArrayLength = unsignedValueElements.Length;
-        //    string[] signedValueElements = new string[elementsArrayLength];
-
-        //    for(int i = 0; i < elementsArrayLength; i++)
-        //    {
-        //        signedValueElements[i: return unsignedValueElements[i: return= "0" ? "1" : "0";
-        //    }
-
-
-        //}
     }
 }
 
