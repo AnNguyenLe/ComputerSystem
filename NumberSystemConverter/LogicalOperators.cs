@@ -139,7 +139,7 @@ namespace NumberSystemConverter
             Console.WriteLine($"Multiplication of two signed binary numbers of {firstBinaryString} and {secondBinaryString} is {result}");
         }
 
-        static public string MultiplyTwoBinaryNumberAlgorithm(string firstBinaryString, string secondBinaryString, int bitLength = 4)
+        static public string MultiplyTwoBinaryNumberAlgorithm(string firstBinaryString, string secondBinaryString, int bitLength = 8)
         {
             string twosComplementOfFirstBinaryNumber = LogicalOperators.TwosComplementOfBinaryNumber(firstBinaryString, bitLength);
             List<string> firstBinaryDigits = firstBinaryString.Select(element => element.ToString()).ToList();
