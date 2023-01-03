@@ -59,8 +59,8 @@ namespace NumberSystemConverter
 
         static public string AddTwoBinaryNumberAlgorithm(string firstBinaryString, string secondBinaryString, int bitLength = 8)
         {
-            char[] firstBinaryDigits = firstBinaryString.PadLeft(bitLength, '0').ToCharArray();
-            char[] secondBinaryDigits = secondBinaryString.PadLeft(bitLength, '0').ToCharArray();
+            char[] firstBinaryDigits = firstBinaryString.ToCharArray();
+            char[] secondBinaryDigits = secondBinaryString.ToCharArray();
 
             int[] resultElements = new int[bitLength];
 
@@ -97,16 +97,15 @@ namespace NumberSystemConverter
 
         static public string TwosComplementOfBinaryNumber(string inputBinaryString, int bitLength = 8)
         {
-            char[] binaryDigits = inputBinaryString.PadLeft(bitLength, '0').ToCharArray();
-            int binaryLength = binaryDigits.Length;
+            char[] binaryDigits = inputBinaryString.ToCharArray();
 
             string outputBinaryString = "";
-            for (int i = 0; i < binaryLength; i++)
+            for (int i = 0; i < bitLength; i++)
             {
                 outputBinaryString += binaryDigits[i] == '0' ? "1" : "0";
             }
 
-            return LogicalOperators.AddTwoBinaryNumberAlgorithm(outputBinaryString, "1", bitLength);
+            return LogicalOperators.AddTwoBinaryNumberAlgorithm(outputBinaryString, "1".PadLeft(bitLength, '0'), bitLength);
         }
 
         static public void SubtractTwoBinaryNumbers()
@@ -159,7 +158,8 @@ namespace NumberSystemConverter
                 {
                     accumulator = LogicalOperators.AddTwoBinaryNumberAlgorithm(currentAccString, twosComplementOfFirstBinaryNumber, bitLength).Select(element => element.ToString()).ToList();
                 }
-                else if (secondBinaryDigits[bitLength - 1] == "0" && secondBinaryAdditionalBit == "1")
+
+                if (secondBinaryDigits[bitLength - 1] == "0" && secondBinaryAdditionalBit == "1")
                 {
                     accumulator = LogicalOperators.AddTwoBinaryNumberAlgorithm(currentAccString, firstBinaryString, bitLength).Select(element => element.ToString()).ToList();
                 }
@@ -171,11 +171,10 @@ namespace NumberSystemConverter
 
                 accumulator.RemoveAt(bitLength - 1);
                 accumulator.Insert(0, secondBinaryAdditionalBit);
+
             }
 
             return String.Join("", accumulator.Concat(secondBinaryDigits));
-
-
         }
     }
 }
