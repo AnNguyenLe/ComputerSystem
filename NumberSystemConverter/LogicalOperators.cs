@@ -26,7 +26,7 @@ namespace NumberSystemConverter
                     LogicalOperators.SubtractTwoBinaryNumbers();
                     break;
                 case "C":
-                    NumberSystem.ConvertFromBinToDec();
+                    LogicalOperators.MultiplyTwoBinaryNumbers();
                     break;
                 case "D":
                     NumberSystem.ConvertFromHexToDec();
@@ -106,7 +106,7 @@ namespace NumberSystemConverter
                 outputBinaryString += binaryDigits[i] == '0' ? "1" : "0";
             }
 
-            return LogicalOperators.AddTwoBinaryNumberAlgorithm(outputBinaryString, "1");
+            return LogicalOperators.AddTwoBinaryNumberAlgorithm(outputBinaryString, "1", bitLength);
         }
 
         static public void SubtractTwoBinaryNumbers()
@@ -122,6 +122,60 @@ namespace NumberSystemConverter
             string result = LogicalOperators.AddTwoBinaryNumberAlgorithm(firstBinaryString, LogicalOperators.TwosComplementOfBinaryNumber(secondBinaryString));
             Console.WriteLine($"Subtraction of two signed binary numbers of {firstBinaryString} and {secondBinaryString} is {result}");
             Console.WriteLine("--------------------");
+        }
+
+        static public void MultiplyTwoBinaryNumbers()
+        {
+            Console.WriteLine("This is MultiplyTwoBinaryNumbers: A x B");
+
+            Console.Write("Your 1st binary number (8 bits) as A: ");
+            string firstBinaryString = Console.ReadLine();
+
+            Console.Write("Your 2nd binary number (8 bits) as B: ");
+            string secondBinaryString = Console.ReadLine();
+
+            string result = LogicalOperators.MultiplyTwoBinaryNumberAlgorithm(firstBinaryString, secondBinaryString);
+
+            Console.WriteLine($"Multiplication of two signed binary numbers of {firstBinaryString} and {secondBinaryString} is {result}");
+        }
+
+        static public string MultiplyTwoBinaryNumberAlgorithm(string firstBinaryString, string secondBinaryString, int bitLength = 4)
+        {
+            string twosComplementOfFirstBinaryNumber = LogicalOperators.TwosComplementOfBinaryNumber(firstBinaryString, bitLength);
+            List<string> firstBinaryDigits = firstBinaryString.Select(element => element.ToString()).ToList();
+
+            List<string> secondBinaryDigits = secondBinaryString.Select(element => element.ToString()).ToList();
+
+            string secondBinaryAdditionalBit = "0";
+
+            List<string> accumulator = new List<string>(bitLength);
+            accumulator.AddRange(Enumerable.Repeat("0", bitLength));
+
+            for (int i = 0; i < bitLength; i++)
+            {
+                string currentAccString = String.Join("", accumulator);
+
+                if (secondBinaryDigits[bitLength - 1] == "1" && secondBinaryAdditionalBit == "0")
+                {
+                    accumulator = LogicalOperators.AddTwoBinaryNumberAlgorithm(currentAccString, twosComplementOfFirstBinaryNumber, bitLength).Select(element => element.ToString()).ToList();
+                }
+                else if (secondBinaryDigits[bitLength - 1] == "0" && secondBinaryAdditionalBit == "1")
+                {
+                    accumulator = LogicalOperators.AddTwoBinaryNumberAlgorithm(currentAccString, firstBinaryString, bitLength).Select(element => element.ToString()).ToList();
+                }
+
+                secondBinaryAdditionalBit = secondBinaryDigits[bitLength - 1];
+
+                secondBinaryDigits.RemoveAt(bitLength - 1);
+                secondBinaryDigits.Insert(0, accumulator[bitLength - 1].ToString());
+
+                accumulator.RemoveAt(bitLength - 1);
+                accumulator.Insert(0, secondBinaryAdditionalBit);
+            }
+
+            return String.Join("", accumulator.Concat(secondBinaryDigits));
+
+
         }
     }
 }
