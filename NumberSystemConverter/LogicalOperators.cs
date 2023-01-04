@@ -29,7 +29,7 @@ namespace NumberSystemConverter
                     LogicalOperators.MultiplyTwoBinaryNumbers();
                     break;
                 case "D":
-                    NumberSystem.ConvertFromHexToDec();
+                    LogicalOperators.DivisionOfTwoBinaryNumbers();
                     break;
                 default:
                     Console.WriteLine("Your input did not match any options listed above. So we assumed A is your selection as a default ^_^");
@@ -175,6 +175,57 @@ namespace NumberSystemConverter
             }
 
             return String.Join("", accumulator.Concat(secondBinaryDigits));
+        }
+
+        static public void DivisionOfTwoBinaryNumbers()
+        {
+            Console.WriteLine("This is DivisionOfTwoBinaryNumbers: A / B");
+
+            Console.Write("Your 1st binary number (8 bits) as A: ");
+            string firstBinaryString = Console.ReadLine();
+
+            Console.Write("Your 2nd binary number (8 bits) as B: ");
+            string secondBinaryString = Console.ReadLine();
+
+            (string result, string remainder) = LogicalOperators.DivisionOfTwoBinaryNumbersAlgorithm(firstBinaryString, secondBinaryString);
+
+            Console.WriteLine($"Division of two signed binary numbers: {firstBinaryString} / {secondBinaryString} is {result} with remainder of {remainder}");
+        }
+
+        static public (string, string) DivisionOfTwoBinaryNumbersAlgorithm(string firstBinaryString, string secondBinaryString, int bitLength = 8)
+        {
+            List<string> accumulator = new List<string>(bitLength);
+            accumulator.AddRange(Enumerable.Repeat("0", bitLength));
+            if (firstBinaryString != "0".PadLeft(bitLength, '0') && firstBinaryString[0] == '1')
+            {
+                accumulator.Clear();
+                accumulator.AddRange(Enumerable.Repeat("1", bitLength));
+            }
+
+            List<string> firstBinaryDigits = firstBinaryString.Select(element => element.ToString()).ToList();
+
+            string twosComplementOfSecondBinaryNumber = secondBinaryString[0] == '0' ? LogicalOperators.TwosComplementOfBinaryNumber(secondBinaryString, bitLength) : secondBinaryString;
+            List<string> secondBinaryDigits = secondBinaryString.Select(element => element.ToString()).ToList();
+
+            for (int i = 0; i < bitLength; i++)
+            {
+                // Left-shifting
+                accumulator.Add(firstBinaryDigits[0]);
+                accumulator.RemoveAt(0);
+                firstBinaryDigits.Add("0");
+                firstBinaryDigits.RemoveAt(0);
+
+                string currentAccString = String.Join("", accumulator);
+                if (LogicalOperators.AddTwoBinaryNumberAlgorithm(currentAccString, twosComplementOfSecondBinaryNumber, bitLength)[0] == '0')
+                {
+                    firstBinaryDigits[bitLength - 1] = "1";
+                    accumulator.Clear();
+                    accumulator.AddRange(Enumerable.Repeat("0", bitLength));
+                }
+
+            }
+
+            return (String.Join("", firstBinaryDigits), String.Join("", accumulator));
         }
     }
 }
