@@ -140,6 +140,7 @@ namespace NumberSystemConverter
 
         static public string MultiplyTwoBinaryNumberAlgorithm(string firstBinaryString, string secondBinaryString, int bitLength = 8)
         {
+            bool isFirstBinaryNegative = firstBinaryString[0] == '1';
             string twosComplementOfFirstBinaryNumber = LogicalOperators.TwosComplementOfBinaryNumber(firstBinaryString, bitLength);
             List<string> firstBinaryDigits = firstBinaryString.Select(element => element.ToString()).ToList();
 
@@ -167,11 +168,10 @@ namespace NumberSystemConverter
                 secondBinaryAdditionalBit = secondBinaryDigits[bitLength - 1];
 
                 secondBinaryDigits.RemoveAt(bitLength - 1);
-                secondBinaryDigits.Insert(0, accumulator[bitLength - 1].ToString());
+                secondBinaryDigits.Insert(0, accumulator[bitLength - 1]);
 
                 accumulator.RemoveAt(bitLength - 1);
-                accumulator.Insert(0, secondBinaryAdditionalBit);
-
+                accumulator.Insert(0, isFirstBinaryNegative ? "0" : secondBinaryAdditionalBit);
             }
 
             return String.Join("", accumulator.Concat(secondBinaryDigits));
@@ -204,25 +204,27 @@ namespace NumberSystemConverter
 
             List<string> firstBinaryDigits = firstBinaryString.Select(element => element.ToString()).ToList();
 
-            string twosComplementOfSecondBinaryNumber = secondBinaryString[0] == '0' ? LogicalOperators.TwosComplementOfBinaryNumber(secondBinaryString, bitLength) : secondBinaryString;
-            List<string> secondBinaryDigits = secondBinaryString.Select(element => element.ToString()).ToList();
+            string twosComplementOfSecondBinaryNumber = LogicalOperators.TwosComplementOfBinaryNumber(secondBinaryString, bitLength);
 
             for (int i = 0; i < bitLength; i++)
             {
                 // Left-shifting
                 accumulator.Add(firstBinaryDigits[0]);
                 accumulator.RemoveAt(0);
-                firstBinaryDigits.Add("0");
                 firstBinaryDigits.RemoveAt(0);
+                firstBinaryDigits.Add("0");
 
-                string currentAccString = String.Join("", accumulator);
-                if (LogicalOperators.AddTwoBinaryNumberAlgorithm(currentAccString, twosComplementOfSecondBinaryNumber, bitLength)[0] == '0')
+                accumulator = LogicalOperators.AddTwoBinaryNumberAlgorithm(String.Join("", accumulator), twosComplementOfSecondBinaryNumber, bitLength).Select(element => element.ToString()).ToList();
+
+                if (accumulator.First() == "1")
                 {
-                    firstBinaryDigits[bitLength - 1] = "1";
-                    accumulator.Clear();
-                    accumulator.AddRange(Enumerable.Repeat("0", bitLength));
+                    accumulator = LogicalOperators.AddTwoBinaryNumberAlgorithm(String.Join("", accumulator), secondBinaryString, bitLength).Select(element => element.ToString()).ToList();
                 }
-
+                else
+                {
+                    firstBinaryDigits.RemoveAt(bitLength - 1);
+                    firstBinaryDigits.Add("1");
+                }
             }
 
             return (String.Join("", firstBinaryDigits), String.Join("", accumulator));
